@@ -60,7 +60,7 @@ public class KafkaWindowWordCount {
         properties.setProperty("bootstrap.servers", brokerlist);
         properties.setProperty("group.id", groupId);
 
-        DataStream<String> stream = env.addSource(new FlinkKafkaConsumer<String>(topic, new SimpleStringSchema(), properties));
+        DataStream<String> stream = env.addSource(new FlinkKafkaConsumer<>(topic, new SimpleStringSchema(), properties));
 
         // parse the data, group it, window it, and aggregate the counts
         DataStream<WordWithCount> windowCounts =
