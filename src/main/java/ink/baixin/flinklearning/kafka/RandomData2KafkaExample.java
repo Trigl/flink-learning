@@ -49,7 +49,7 @@ public class RandomData2KafkaExample {
         properties.setProperty("bootstrap.servers", brokerlist);
 
         DataStream<String> stream = env
-                .addSource(new DataGeneratorSource<>(RandomGenerator.stringGenerator(10), 10000, null))
+                .addSource(new DataGeneratorSource<>(RandomGenerator.stringGenerator(10), 100, null))
                 .returns(Types.STRING);
 
         FlinkKafkaProducer<String> myProducer = new FlinkKafkaProducer<>(

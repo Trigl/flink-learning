@@ -32,18 +32,18 @@ import org.apache.flink.util.Collector;
 public class StreamingWordCount {
 
     public static void main(String[] args) throws Exception {
-
         // get the execution environment
         final StreamExecutionEnvironment env = StreamExecutionEnvironment.getExecutionEnvironment();
+        env.setParallelism(2);
 
         // source
-        DataStream<String> stream = env
+        DataStream<String> source = env
                 .addSource(new DataGeneratorSource<>(RandomGenerator.stringGenerator(10), 10000, null))
                 .setParallelism(1)
                 .returns(Types.STRING);
 
         // parse the data, group it, and aggregate the counts
-        DataStream<WordWithCount> counts = stream
+        DataStream<WordWithCount> counts = source
                 .flatMap(new FlatMapFunction<String, WordWithCount>() {
                     @Override
                     public void flatMap(
@@ -53,13 +53,11 @@ public class StreamingWordCount {
                         }
                     }
                 })
-                .setParallelism(2)
                 .keyBy(value -> value.word)
-                .sum("count")
-                .setParallelism(2);
+                .sum("count");
 
         // print the results with a single thread, rather than in parallel
-        counts.print().setParallelism(2);
+        counts.print();
 
         env.execute("Streaming WordCount");
     }

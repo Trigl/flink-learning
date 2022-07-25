@@ -76,7 +76,7 @@ public class Kafka2KafkaWindowExample {
                             }
                         })
                         .keyBy(value -> value.word)
-                        .window(TumblingProcessingTimeWindows.of(Time.seconds(5)))
+                        .window(TumblingProcessingTimeWindows.of(Time.seconds(1)))
                         .reduce(
                                 new ReduceFunction<KafkaWindowWordCount.WordWithCount>() {
                                     @Override
